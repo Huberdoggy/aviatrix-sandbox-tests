@@ -9,3 +9,4 @@ terraform.tfvars
 
 # Generated RSA keys within code
 *.pem
+*.pub
