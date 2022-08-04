@@ -28,13 +28,19 @@ variable "http_port" {
 }
 
 variable "https_port" {
-  description = "For use with security group allow"
+  description = "For use with security group allow. Access Aviatrix CoPilot web UI"
   type        = number
   default     = 443
 }
 
-variable "docker_port" {
-  description = "For use with security groupe allow. Accessing Aviatrix web interface on default Docker container port"
+variable "syslog_port" {
+  description = "For use with security groupe allow. Accessing Aviatrix Syslog (UDP)"
   type        = number
   default     = 5000
+}
+
+variable "flowiq_port" {
+  description = "For use with security groupe allow. Accessing Aviatrix FlowIQ (UDP)"
+  type        = number
+  default     = 31283
 }

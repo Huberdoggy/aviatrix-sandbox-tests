@@ -1,6 +1,11 @@
 # Remote S3 now holds state under .terraform dir
 .terraform/
+# In case I switch it back to locally stored
+terraform.tfstate
+terraform.tfstate.backup*
 terraform.tfvars
+# When running 'destory' and TF tries to write to non-existent state..
+errored*
 
 # Workspace
 .vscode

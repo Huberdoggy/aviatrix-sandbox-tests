@@ -37,6 +37,10 @@ data "aws_vpc" "default" {
   default = true
 }
 
+data "external" "whatismyip" { # Exec my pub IP retrieval script
+  program = ["/bin/bash", "${path.cwd}/whatismyip.sh"]
+}
+
 resource "aws_security_group" "kyle-sg" {
   name        = "kyle-sg"
   description = "Custom defined rules for SSH and inbound web access"
@@ -66,19 +70,30 @@ resource "aws_security_group_rule" "allow-http" {
 }
 
 resource "aws_security_group_rule" "allow-https" {
+  type      = "ingress"
+  from_port = var.https_port
+  to_port   = var.https_port
+  protocol  = "tcp"
+  # Use printf to inject 2 strings - output of shell script pub IP and the single IP to accept for CIDR range /32 (equivalent to Only My IP in AWS)
+  cidr_blocks = [format("%s/%s", data.external.whatismyip.result["internet_ip"], 32)]
+  # cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.kyle-sg.id
+}
+
+resource "aws_security_group_rule" "allow-aviatrix_syslog" {
   type              = "ingress"
-  from_port         = var.https_port
-  to_port           = var.https_port
-  protocol          = "tcp"
+  from_port         = var.syslog_port
+  to_port           = var.syslog_port
+  protocol          = "udp"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.kyle-sg.id
 }
 
-resource "aws_security_group_rule" "allow-aviatrix_webadmin" {
+resource "aws_security_group_rule" "allow-aviatrix_flowiq" {
   type              = "ingress"
-  from_port         = var.docker_port
-  to_port           = var.docker_port
-  protocol          = "tcp"
+  from_port         = var.flowiq_port
+  to_port           = var.flowiq_port
+  protocol          = "udp"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.kyle-sg.id
 }
