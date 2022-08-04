@@ -20,3 +20,21 @@ variable "ssh_port" {
   type        = number
   default     = 22
 }
+
+variable "http_port" {
+  description = "For use with security group allow"
+  type        = number
+  default     = 80
+}
+
+variable "https_port" {
+  description = "For use with security group allow"
+  type        = number
+  default     = 443
+}
+
+variable "docker_port" {
+  description = "For use with security groupe allow. Accessing Aviatrix web interface on default Docker container port"
+  type        = number
+  default     = 5000
+}

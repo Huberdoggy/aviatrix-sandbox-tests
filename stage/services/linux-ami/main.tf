@@ -1,4 +1,11 @@
 terraform {
+  backend "s3" {
+    bucket  = "kyle-aviatrix-s3-bucket"
+    key     = "stage/services/linux-ami/terraform.tfstate"
+    region  = "us-east-1" # vars can't be used here...
+    profile = "development"
+    encrypt = true
+  }
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -44,6 +51,33 @@ resource "aws_security_group_rule" "allow-ssh" {
   type              = "ingress"
   from_port         = var.ssh_port
   to_port           = var.ssh_port
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.kyle-sg.id
+}
+
+resource "aws_security_group_rule" "allow-http" {
+  type              = "ingress"
+  from_port         = var.http_port
+  to_port           = var.http_port
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.kyle-sg.id
+}
+
+resource "aws_security_group_rule" "allow-https" {
+  type              = "ingress"
+  from_port         = var.https_port
+  to_port           = var.https_port
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.kyle-sg.id
+}
+
+resource "aws_security_group_rule" "allow-aviatrix_webadmin" {
+  type              = "ingress"
+  from_port         = var.docker_port
+  to_port           = var.docker_port
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.kyle-sg.id

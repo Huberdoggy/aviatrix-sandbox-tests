@@ -1,7 +1,5 @@
-# 3 levels down to wildcard undesired Terraform patterns in 'linux-ami'. Can override more specific local dirs
+# Remote S3 now holds state under .terraform dir
 .terraform/
-terraform.tfstate
-terraform.tfstate.*backup
 terraform.tfvars
 
 # Workspace
